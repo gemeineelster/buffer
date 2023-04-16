@@ -5,8 +5,8 @@
  *      Author: nullachtfuenfzehn
  */
 
-#ifndef INC_UTIL_BUFFER_H_
-#define INC_UTIL_BUFFER_H_
+#ifndef BUFFER_H_
+#define BUFFER_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,4 +35,4 @@ int8_t bufferWrite(Buffer_Handler_t*, uint8_t*);
 }
 #endif
 
-#endif /* INC_UTIL_BUFFER_H_ */
+#endif /* BUFFER_H_ */
