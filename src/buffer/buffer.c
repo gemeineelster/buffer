@@ -3,48 +3,60 @@
 
 
 Buffer_Handler_t *bufferCreate(uint8_t size) {
-	Buffer_Handler_t *buffer = (Buffer_Handler_t*) malloc(sizeof(Buffer_Handler_t));
-	buffer->size = size;
-	buffer->data = (uint8_t*) calloc(size, sizeof(uint8_t));
- 	buffer->readIndex = 0;
-	buffer->writeIndex = 0;
-	buffer->overFlow = false;
-	buffer->full = false;
+	Buffer_Handler_t *buf = (Buffer_Handler_t*) malloc(sizeof(Buffer_Handler_t));
+	buf->size = size;
+	buf->data = (uint8_t*) calloc(size, sizeof(uint8_t));
+ 	buf->readIndex = 0;
+	buf->writeIndex = 0;
+	buf->overFlow = false;
+	buf->full = false;
 
-	return buffer;
+	return buf;
 }
 
-int8_t bufferDestroy(Buffer_Handler_t *buffer) {
+int8_t bufferDestroy(Buffer_Handler_t *buf) {
 	// Destroying an reallocating buffer
+	if (buf == NULL) {
+		return -1;
+	}
+
+	buf->size = 0;
+	free(buf->data);
+	buf->readIndex = 0;
+	buf->writeIndex = 0;
+	buf->overFlow = false;
+	buf->full = false;
+
+	free(buf);
 	return -1;
 }
 
-int8_t bufferWrite(Buffer_Handler_t *buffer, uint8_t *data) {
+int8_t bufferWrite(Buffer_Handler_t *buf, uint8_t *data) {
 	uint8_t cnt_data = 0;
 
-	if(buffer == NULL) {
+	if(buf == NULL) {
 		return -1;
 	}
 
 	while (data[cnt_data] != '\n') {
-		buffer->data[buffer->writeIndex++] = data[cnt_data++];
+		buf->data[buf->writeIndex++] = data[cnt_data++];
 
-		if (buffer->writeIndex >= buffer->size) {
-			buffer->writeIndex = 0;
-			buffer->overFlow = true;
+		if (buf->writeIndex >= buf->size) {
+			buf->writeIndex = 0;
+			buf->overFlow = true;
 		}
 	}
 
 	return 0;
 }
 
-uint8_t bufferRead(Buffer_Handler_t* buffer) {
-	if (buffer == NULL) {
+uint8_t bufferRead(Buffer_Handler_t* buf) {
+	/*if (buf == NULL) {
 		return NULL;
 	}
-	if (buffer->writeIndex == buffer->readIndex) {
+	if (buf->writeIndex == buf->readIndex) {
 		return NULL;
-	}
+	}*/
 
-	return buffer->data[buffer->readIndex++];
+	return buf->data[buf->readIndex++];
 }

@@ -28,6 +28,7 @@ typedef struct {
 } Buffer_Handler_t;
 
 Buffer_Handler_t *bufferCreate(uint8_t);
+int8_t bufferDestroy(Buffer_Handler_t*);
 int8_t bufferWrite(Buffer_Handler_t*, uint8_t*);
 
 
