@@ -3,7 +3,9 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/src/average/**",
+                "${workspaceFolder}/src/buffer/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang-14",
