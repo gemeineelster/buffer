@@ -39,7 +39,7 @@ typedef enum {
 Buffer_Handler_t *bufferCreate(uint8_t);
 int8_t bufferDestroy(Buffer_Handler_t*);
 ENUM_RET bufferWrite(Buffer_Handler_t*, uint8_t*, uint8_t size);
-ENUM_RET bufferRead(Buffer_Handler_t*, uint8_t*, uint8_t size);
+ENUM_RET bufferRead(Buffer_Handler_t*, uint8_t*, uint8_t *size);
 
 
 #ifdef __cplusplus

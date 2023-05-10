@@ -37,14 +37,19 @@ ENUM_RET bufferWrite(Buffer_Handler_t *buf, uint8_t *data, uint8_t size) {
 		return FAIL;
 	}
 
-	for (int i = 0; i < size; i++) {
+	for (uint8_t i = 0; i < size; i++) {
+		if (buf->full) {
+			/*Test Begin*/
+			//strcpy(data, "Fast");
+			/*Test End*/
+			return WARNING;
+		}
+
 		buf->data[buf->writeIndex++] = data[i];
 		buf->empty = false;
 
 		if (buf->writeIndex == buf->size) {
 			buf->writeIndex = 0;
-			//buf->full = true;
-			//TODO: CHECKING BUF->FULL
 			buf->overflow = true;
 		}
 
@@ -56,15 +61,27 @@ ENUM_RET bufferWrite(Buffer_Handler_t *buf, uint8_t *data, uint8_t size) {
 	return SUCCESS;
 }
 
-ENUM_RET bufferRead(Buffer_Handler_t* buf, uint8_t* data, uint8_t size) {
-	uint8_t readSize = 0;
+ENUM_RET bufferRead(Buffer_Handler_t* buf, uint8_t* data, uint8_t *size) {
+	volatile uint8_t readSize = 0;
 	if (buf == NULL) {
 		return FAIL;
 	}
+
+	strcpy((char*) data, "\0");
 	
-	for (int i = 0; i < size; i++) {
+	for (int i = 0; i < *size; i++) {
 		data[i] = buf->data[buf->readIndex++];
+		buf->full = false;
 		readSize++;
+
+		if (buf->readIndex >= buf->size) {
+			buf->readIndex = 0;
+			buf->overflow = false;
+		}
+
+		if (i >= *size) {
+			break;
+		}
 
 		if (buf->readIndex == buf->writeIndex) {
 			buf->empty = true;
@@ -72,7 +89,9 @@ ENUM_RET bufferRead(Buffer_Handler_t* buf, uint8_t* data, uint8_t size) {
 		}
 	}
 
-	size = readSize;
+	data[readSize] = '\0';
+
+	*size = readSize;
 
 	return SUCCESS;
 }
