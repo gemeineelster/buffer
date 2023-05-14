@@ -109,6 +109,10 @@ ArrayBuffer_Handler_t* arrayBufferCreate(uint16_t sizeArray, uint16_t sizeEachAr
 		arrBuf->arrData[i] = (uint8_t*) calloc(sizeEachArray+1, sizeof(uint8_t));
 	}
 
+	arrBuf->empty = true;
+	arrBuf->full = false;
+	arrBuf->overflow = false;
+
 	return arrBuf;
 }
 
@@ -127,19 +131,29 @@ ENUM_RET arrayBufferDestroy(ArrayBuffer_Handler_t *arrBuff) {
 }
 
 ENUM_RET arrayBufferWrite(ArrayBuffer_Handler_t* arrBuf, uint8_t* data, uint16_t sizeData) {
-	
+	uint16_t lastIndex = 0;
+
 	for (int i = 0; i < sizeData; i++) {
-		arrBuf->arrData[0][i] = data[i];
+		arrBuf->arrData[arrBuf->writeIndex][i] = data[i];
+		lastIndex++;
 	}
+	arrBuf->arrData[arrBuf->writeIndex][lastIndex] = '\0';
+
+	arrBuf->writeIndex++;
 
 	return OK;
 }
 
-ENUM_RET arrayBufferRead(ArrayBuffer_Handler_t* arrBuf, uint8_t** data, uint16_t sizeDataArray, uint16_t sizeEachDataArray) {
-	for (int i = 0; i < sizeDataArray; i++) {
-		for (int k = 0; k < sizeEachDataArray; k++) {
-			data[i][k] = arrBuf->arrData[0][k];
-		}
+ENUM_RET arrayBufferRead(ArrayBuffer_Handler_t* arrBuf, uint8_t* data, uint16_t sizeData) {
+	uint16_t lastIndex = 0;
+
+	for (int i = 0; (i < sizeData-1 && i < arrBuf->sizeEachArray); i++) {
+		data[i] = arrBuf->arrData[arrBuf->readIndex][i];
+		lastIndex++;
 	}
+
+	data[lastIndex] = '\0';
+	arrBuf->readIndex++;
+
 	return OK;
 }

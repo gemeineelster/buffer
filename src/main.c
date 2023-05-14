@@ -12,9 +12,15 @@ int main()
     uint8_t rString[20] = "asdf";
     uint16_t s = 20;
 
-    ArrayBuffer_Handler_t *arrBuff = arrayBufferCreate(8, 16);
+    ArrayBuffer_Handler_t *arrBuf = arrayBufferCreate(4, 8);
 
-    arrayBufferDestroy(arrBuff);
+    arrayBufferWrite(arrBuf, (uint8_t*) string1, sizeof(string1));
+    arrayBufferWrite(arrBuf, (uint8_t*) string2, sizeof(string1));
+
+    arrayBufferRead(arrBuf, rString, sizeof(rString));
+    arrayBufferRead(arrBuf, rString, sizeof(rString));
+
+    arrayBufferDestroy(arrBuf);
 
 
     printf("Hello World");

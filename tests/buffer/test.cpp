@@ -337,17 +337,14 @@ TEST(buffer_test_group, bufferRead_paramSize_testWithManyData_2) {
 
 TEST_GROUP(arrayBuffer_test_group) {
     ArrayBuffer_Handler_t *arrBuf = NULL;
-    uint8_t **retArray_2x8 = NULL;
-    uint8_t sizeArray_2x8 = 2;
-    uint8_t sizeEachArray_2x8 = 8;
+    uint8_t retData[20] = "";
+    uint16_t size_retData = 20;
+    uint16_t size_arrBuf = 4;
+    uint16_t size_arrBufEach = 16;
 
    void setup()
    {
-        arrBuf = arrayBufferCreate(4, 16);
-        retArray_2x8 = (uint8_t**) malloc(2 * sizeof(uint8_t*));
-        for (int i = 0; i < sizeArray_2x8; i++) {
-            retArray_2x8[i] = (uint8_t*) calloc(sizeEachArray_2x8, sizeof(uint8_t));
-        }
+        arrBuf = arrayBufferCreate(size_arrBuf, size_arrBufEach);
 
    }
 
@@ -355,15 +352,15 @@ TEST_GROUP(arrayBuffer_test_group) {
    {
         arrayBufferDestroy(arrBuf);
 
-        for (int i = 0; i < sizeArray_2x8; i++) {
-            free(retArray_2x8[i]);
-        }
-        free(retArray_2x8);
    }
 };
 
-TEST(arrayBuffer_test_group, arrayBufferCreate) {
+TEST(arrayBuffer_test_group, arrayBufferCreate_valid) {
     ArrayBuffer_Handler_t * arrBuff = arrayBufferCreate((uint16_t) 4, (uint16_t) 8);
+
+    CHECK_TRUE(arrBuff->empty);
+    CHECK_FALSE(arrBuff->full);
+    CHECK_FALSE(arrBuff->overflow);
 
     ENUM_RET ret = arrayBufferDestroy(arrBuff);
 
@@ -390,24 +387,45 @@ TEST(arrayBuffer_test_group, arrayBufferWrite_oneString) {
     CHECK_EQUAL(OK, ret);
 }
 
-TEST(arrayBuffer_test_group, arrayBufferRead_oneString) {
-    char string1[] = "String1";
-    //char string2[] = "STRING2";
-
-    ENUM_RET ret = arrayBufferWrite(arrBuf, (uint8_t*) string1, sizeof(string1));
-    ret = arrayBufferRead(arrBuf, retArray_2x8, sizeArray_2x8, sizeEachArray_2x8);
-
-    CHECK_EQUAL(OK, ret);
-    STRCMP_EQUAL(string1, (char*) retArray_2x8[0]);
-}
-
 TEST(arrayBuffer_test_group, arrayBufferRead_twoStrings) {
     char string1[] = "String1";
-    //char string2[] = "STRING2";
+    char string2[] = "STRING2";
 
     ENUM_RET ret = arrayBufferWrite(arrBuf, (uint8_t*) string1, sizeof(string1));
-    ret = arrayBufferRead(arrBuf, retArray_2x8, sizeArray_2x8, sizeEachArray_2x8);
+    ret = arrayBufferWrite(arrBuf, (uint8_t*) string2, sizeof(string2));
+    ret = arrayBufferRead(arrBuf, retData, size_retData);
 
     CHECK_EQUAL(OK, ret);
-    STRCMP_EQUAL(string1, (char*) retArray_2x8[0]);
+    STRCMP_EQUAL(string1, (char*) retData);
+
+    ret = arrayBufferRead(arrBuf, retData, size_retData);
+
+    CHECK_EQUAL(OK, ret);
+    STRCMP_EQUAL(string2, (char*) retData);
 }
+
+IGNORE_TEST(arrayBuffer_test_group, arrayBufferRead_moreThanPossible) {
+    CHECK_TRUE(true);
+    CHECK_FALSE(false);
+}
+
+IGNORE_TEST(arrayBuffer_test_group, arrayBufferRead_moreAsPossible) {
+    char string1[] = "String1";
+    char string2[] = "STRING2";
+    
+    ENUM_RET ret = arrayBufferWrite(arrBuf, (uint8_t*) string1, sizeof(string1));
+    CHECK_EQUAL(OK, ret);
+
+    ret = arrayBufferWrite(arrBuf, (uint8_t*) string2, sizeof(string2));
+    CHECK_EQUAL(OK, ret);
+
+    ret = arrayBufferWrite(arrBuf, (uint8_t*) string1, sizeof(string2));
+    CHECK_EQUAL(OK, ret);
+
+    ret = arrayBufferWrite(arrBuf, (uint8_t*) string2, sizeof(string2));
+    CHECK_EQUAL(OK, ret);
+
+    ret = arrayBufferWrite(arrBuf, (uint8_t*) string1, sizeof(string2));
+    CHECK_EQUAL(WARNING, ret);
+}
+

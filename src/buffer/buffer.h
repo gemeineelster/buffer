@@ -55,7 +55,7 @@ ENUM_RET bufferRead(Buffer_Handler_t*, uint8_t*, uint16_t *size);
 ArrayBuffer_Handler_t *arrayBufferCreate(uint16_t sizeArray, uint16_t sizeEachArray);
 ENUM_RET arrayBufferDestroy(ArrayBuffer_Handler_t *);
 ENUM_RET arrayBufferWrite(ArrayBuffer_Handler_t* arrBuf, uint8_t* data, uint16_t sizeData);
-ENUM_RET arrayBufferRead(ArrayBuffer_Handler_t* arrBuf, uint8_t** data, uint16_t sizeDataArray, uint16_t sizeEachDataArray);
+ENUM_RET arrayBufferRead(ArrayBuffer_Handler_t* arrBuf, uint8_t* data, uint16_t sizeData);
 
 
 #ifdef __cplusplus
