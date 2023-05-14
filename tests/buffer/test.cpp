@@ -81,7 +81,7 @@ TEST(buffer_test_group, bufferWrite_paramData_valid) {
 
     int streq = strcmp((char*) ptr_buf_4->data, "Tes");
 
-    CHECK_EQUAL(rtn, SUCCESS);
+    CHECK_EQUAL(rtn, OK);
     CHECK_EQUAL(streq, 0);
     CHECK_EQUAL(ptr_buf_4->writeIndex, 3);
     CHECK_EQUAL(ptr_buf_4->readIndex, 0);
@@ -95,7 +95,7 @@ TEST(buffer_test_group, bufferWrite_paramData_exactSize) {
 
     int streq = strcmp((char*) ptr_buf_4->data, "Test");
 
-    CHECK_EQUAL(rtn, SUCCESS);
+    CHECK_EQUAL(rtn, OK);
     CHECK_EQUAL(streq, 0);
     CHECK_EQUAL(ptr_buf_4->writeIndex, 0);
     CHECK_EQUAL(ptr_buf_4->readIndex, 0);
@@ -124,7 +124,7 @@ TEST(buffer_test_group, bufferWrite_paramSize_writingWithOverflow) {
     ENUM_RET rtn = bufferWrite(ptr_buf_4, (uint8_t*) "Te", 2);
     rtn = bufferRead(ptr_buf_4, (uint8_t*) returnedData_4, &size);
 
-    CHECK_EQUAL(rtn, SUCCESS);
+    CHECK_EQUAL(rtn, OK);
     STRCMP_EQUAL("Te", (char*) ptr_buf_4->data);
     CHECK_EQUAL(ptr_buf_4->writeIndex, 2);
     CHECK_EQUAL(ptr_buf_4->readIndex, 2);
@@ -132,7 +132,7 @@ TEST(buffer_test_group, bufferWrite_paramSize_writingWithOverflow) {
 
     rtn = bufferWrite(ptr_buf_4, (uint8_t*) "Tes", 3);
 
-    CHECK_EQUAL(rtn, SUCCESS);
+    CHECK_EQUAL(rtn, OK);
     CHECK_FALSE(ptr_buf_4->empty);
     CHECK_EQUAL(ptr_buf_4->writeIndex, 1);
     CHECK_EQUAL(ptr_buf_4->overflow, true);
@@ -155,7 +155,7 @@ TEST(buffer_test_group, bufferRead_paramBuffer_exactLength) {
 
     int streq = strcmp((char*) ptr_buf_4->data, "Test");
 
-    CHECK_EQUAL(rtn, SUCCESS);
+    CHECK_EQUAL(rtn, OK);
     STRCMP_EQUAL("Test", (char*) returnedData_4);
     CHECK_EQUAL(streq, 0);
     CHECK_EQUAL(0, ptr_buf_4->readIndex);
@@ -168,7 +168,7 @@ TEST(buffer_test_group, bufferRead_paramSize_smallerThanExpected) {
 
     int streq = strcmp((char*) ptr_buf_4->data, "Tes");
 
-    CHECK_EQUAL(rtn, SUCCESS);
+    CHECK_EQUAL(rtn, OK);
     CHECK_EQUAL(streq, 0);
     CHECK_EQUAL(ptr_buf_4->readIndex, 3);
     CHECK_EQUAL(ptr_buf_4->overflow, false);
@@ -193,7 +193,7 @@ TEST(buffer_test_group, bufferRead_paramSize_writingWithOverflow_notFull) {
     CHECK_FALSE(ptr_buf_4->overflow);
     STRCMP_EQUAL("Te", (char*) returnedData_4);
 
-    CHECK_EQUAL(rtn, SUCCESS);
+    CHECK_EQUAL(rtn, OK);
 
     rtn = bufferWrite(ptr_buf_4, (uint8_t*) "Tes", 3);
 
@@ -209,7 +209,7 @@ TEST(buffer_test_group, bufferRead_paramSize_writingWithOverflow_notFull) {
 
     CHECK_EQUAL(1, ptr_buf_4->writeIndex);
     CHECK_EQUAL(1, ptr_buf_4->readIndex);
-    CHECK_EQUAL(rtn, SUCCESS);
+    CHECK_EQUAL(rtn, OK);
     CHECK_EQUAL(size, 3);
     CHECK_TRUE(ptr_buf_4->empty);
     CHECK_FALSE(ptr_buf_4->overflow);
@@ -220,13 +220,13 @@ TEST(buffer_test_group, bufferRead_paramSize_writingWithOverflow_isFull) {
     uint16_t size = 4;
     ENUM_RET rtn = bufferWrite(ptr_buf_4, (uint8_t*) "Te", 2);
 
-    CHECK_EQUAL(rtn, SUCCESS);
+    CHECK_EQUAL(rtn, OK);
 
     size = 8;
     rtn = bufferWrite(ptr_buf_4, (uint8_t*) "Fast", 4);
     rtn = bufferRead(ptr_buf_4, (uint8_t*) returnedData_4, &size);
 
-    CHECK_EQUAL(rtn, SUCCESS);
+    CHECK_EQUAL(rtn, OK);
     CHECK_EQUAL(size, 4);
     STRCMP_EQUAL("TeFa", (char*) returnedData_4);
     CHECK_TRUE(ptr_buf_4->empty);
@@ -240,7 +240,7 @@ TEST(buffer_test_group, bufferRead_testWithManyData) {
     ENUM_RET rtn = bufferWrite(ptr_buf_4, (uint8_t*) "Te", 2);
     rtn = bufferRead(ptr_buf_4, (uint8_t*) returnedData_4, &size);
 
-    CHECK_EQUAL(rtn, SUCCESS);
+    CHECK_EQUAL(rtn, OK);
     STRCMP_EQUAL("Te", (char*) returnedData_4);
     CHECK_EQUAL(2, ptr_buf_4->writeIndex);
     CHECK_EQUAL(2, ptr_buf_4->readIndex);
@@ -261,7 +261,7 @@ TEST(buffer_test_group, bufferRead_testWithManyData) {
     CHECK_TRUE(ptr_buf_4->overflow);
     CHECK_TRUE(ptr_buf_4->full);
 
-    CHECK_EQUAL(SUCCESS, rtn);
+    CHECK_EQUAL(OK, rtn);
 
     size = 2;
     rtn = bufferRead(ptr_buf_4, readData, &size);
@@ -275,7 +275,7 @@ TEST(buffer_test_group, bufferRead_testWithManyData) {
 
     size = 4;
     rtn = bufferRead(ptr_buf_4, readData, &size);
-    CHECK_EQUAL(SUCCESS, rtn);
+    CHECK_EQUAL(OK, rtn);
     CHECK_EQUAL(2, ptr_buf_4->writeIndex);
     CHECK_EQUAL(2, ptr_buf_4->readIndex);
     CHECK_EQUAL(3, size);
@@ -312,9 +312,9 @@ TEST(buffer_test_group, bufferRead_paramSize_testWithManyData_2) {
     ENUM_RET ret;
     
     ret = bufferWrite(buf, (uint8_t*) string1, sizeof(string1));
-    CHECK_EQUAL(SUCCESS, ret);
+    CHECK_EQUAL(OK, ret);
     ret = bufferWrite(buf, (uint8_t*) string2, sizeof(string2));
-    CHECK_EQUAL(SUCCESS, ret);
+    CHECK_EQUAL(OK, ret);
     ret = bufferWrite(buf, (uint8_t*) string3, sizeof(string3));
     CHECK_EQUAL(WARNING, ret);
 
@@ -322,9 +322,9 @@ TEST(buffer_test_group, bufferRead_paramSize_testWithManyData_2) {
     STRCMP_EQUAL(expData1, realData);
 
     ret = bufferWrite(buf, (uint8_t*) string2, sizeof(string2));
-    CHECK_EQUAL(SUCCESS, ret);
+    CHECK_EQUAL(OK, ret);
     ret = bufferWrite(buf, (uint8_t*) string3, sizeof(string3));
-    CHECK_EQUAL(SUCCESS, ret);
+    CHECK_EQUAL(OK, ret);
     ret = bufferWrite(buf, (uint8_t*) string1, sizeof(string1));
     CHECK_EQUAL(WARNING, ret);
 
@@ -333,4 +333,81 @@ TEST(buffer_test_group, bufferRead_paramSize_testWithManyData_2) {
     STRCMP_EQUAL(expData2, realData);
 
     bufferDestroy(buf);
+}
+
+TEST_GROUP(arrayBuffer_test_group) {
+    ArrayBuffer_Handler_t *arrBuf = NULL;
+    uint8_t **retArray_2x8 = NULL;
+    uint8_t sizeArray_2x8 = 2;
+    uint8_t sizeEachArray_2x8 = 8;
+
+   void setup()
+   {
+        arrBuf = arrayBufferCreate(4, 16);
+        retArray_2x8 = (uint8_t**) malloc(2 * sizeof(uint8_t*));
+        for (int i = 0; i < sizeArray_2x8; i++) {
+            retArray_2x8[i] = (uint8_t*) calloc(sizeEachArray_2x8, sizeof(uint8_t));
+        }
+
+   }
+
+   void teardown()
+   {
+        arrayBufferDestroy(arrBuf);
+
+        for (int i = 0; i < sizeArray_2x8; i++) {
+            free(retArray_2x8[i]);
+        }
+        free(retArray_2x8);
+   }
+};
+
+TEST(arrayBuffer_test_group, arrayBufferCreate) {
+    ArrayBuffer_Handler_t * arrBuff = arrayBufferCreate((uint16_t) 4, (uint16_t) 8);
+
+    ENUM_RET ret = arrayBufferDestroy(arrBuff);
+
+    CHECK_EQUAL(OK, ret);
+}
+
+TEST(arrayBuffer_test_group, arrayBufferDestroy_paramIsNull) {
+    ArrayBuffer_Handler_t * arrBuff = arrayBufferCreate((uint16_t) 4, (uint16_t) 8);
+
+    ENUM_RET ret = arrayBufferDestroy(NULL);
+
+    CHECK_EQUAL(FAIL, ret);
+
+    ret = arrayBufferDestroy(arrBuff);
+    CHECK_EQUAL(OK, ret);
+}
+
+TEST(arrayBuffer_test_group, arrayBufferWrite_oneString) {
+    char string1[] = "String1";
+    //char string2[] = "STRING2";
+
+    ENUM_RET ret = arrayBufferWrite(arrBuf, (uint8_t*) string1, sizeof(string1));
+
+    CHECK_EQUAL(OK, ret);
+}
+
+TEST(arrayBuffer_test_group, arrayBufferRead_oneString) {
+    char string1[] = "String1";
+    //char string2[] = "STRING2";
+
+    ENUM_RET ret = arrayBufferWrite(arrBuf, (uint8_t*) string1, sizeof(string1));
+    ret = arrayBufferRead(arrBuf, retArray_2x8, sizeArray_2x8, sizeEachArray_2x8);
+
+    CHECK_EQUAL(OK, ret);
+    STRCMP_EQUAL(string1, (char*) retArray_2x8[0]);
+}
+
+TEST(arrayBuffer_test_group, arrayBufferRead_twoStrings) {
+    char string1[] = "String1";
+    //char string2[] = "STRING2";
+
+    ENUM_RET ret = arrayBufferWrite(arrBuf, (uint8_t*) string1, sizeof(string1));
+    ret = arrayBufferRead(arrBuf, retArray_2x8, sizeArray_2x8, sizeEachArray_2x8);
+
+    CHECK_EQUAL(OK, ret);
+    STRCMP_EQUAL(string1, (char*) retArray_2x8[0]);
 }

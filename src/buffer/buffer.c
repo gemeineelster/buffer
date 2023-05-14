@@ -97,3 +97,49 @@ ENUM_RET bufferRead(Buffer_Handler_t* buf, uint8_t* data, uint16_t *size) {
 
 	return OK;
 }
+
+ArrayBuffer_Handler_t* arrayBufferCreate(uint16_t sizeArray, uint16_t sizeEachArray) {
+	ArrayBuffer_Handler_t *arrBuf = (ArrayBuffer_Handler_t*) malloc(sizeof(ArrayBuffer_Handler_t));
+	arrBuf->sizeArray = sizeArray;
+	arrBuf->sizeEachArray = sizeEachArray;
+
+	arrBuf->arrData = (uint8_t**) malloc(sizeArray*sizeof(uint8_t*));
+
+	for (int i = 0; i < sizeArray; i++) {
+		arrBuf->arrData[i] = (uint8_t*) calloc(sizeEachArray+1, sizeof(uint8_t));
+	}
+
+	return arrBuf;
+}
+
+ENUM_RET arrayBufferDestroy(ArrayBuffer_Handler_t *arrBuff) {
+	if (arrBuff == NULL) {
+		return FAIL;
+	}
+
+	for (int i = 0; i < arrBuff->sizeArray; i++) {
+		free(arrBuff->arrData[i]);
+	}
+
+	free(arrBuff->arrData);
+	free(arrBuff);
+	return OK;
+}
+
+ENUM_RET arrayBufferWrite(ArrayBuffer_Handler_t* arrBuf, uint8_t* data, uint16_t sizeData) {
+	
+	for (int i = 0; i < sizeData; i++) {
+		arrBuf->arrData[0][i] = data[i];
+	}
+
+	return OK;
+}
+
+ENUM_RET arrayBufferRead(ArrayBuffer_Handler_t* arrBuf, uint8_t** data, uint16_t sizeDataArray, uint16_t sizeEachDataArray) {
+	for (int i = 0; i < sizeDataArray; i++) {
+		for (int k = 0; k < sizeEachDataArray; k++) {
+			data[i][k] = arrBuf->arrData[0][k];
+		}
+	}
+	return OK;
+}
