@@ -304,7 +304,7 @@ TEST(buffer_test_group, bufferRead_paramSize_testWithManyData_2) {
     char string1[] = "String1";
     char string2[] = "STRING2";
     char string3[] = "StRiNg3";
-    char expData[] = "String1STRING2StRiNg3";
+    char expData[] = "String1STRING2St";
     char realData[20] = "";
     uint16_t s = 20;
 
@@ -312,9 +312,9 @@ TEST(buffer_test_group, bufferRead_paramSize_testWithManyData_2) {
     
     ret = bufferWrite(buf, (uint8_t*) string1, sizeof(string1));
     CHECK_EQUAL(SUCCESS, ret);
-    ret = bufferWrite(buf, (uint8_t*) string1, sizeof(string2));
+    ret = bufferWrite(buf, (uint8_t*) string2, sizeof(string2));
     CHECK_EQUAL(SUCCESS, ret);
-    ret = bufferWrite(buf, (uint8_t*) string1, sizeof(string3));
+    ret = bufferWrite(buf, (uint8_t*) string3, sizeof(string3));
     CHECK_EQUAL(WARNING, ret);
 
     ret = bufferRead(buf, (uint8_t*) realData, &s);

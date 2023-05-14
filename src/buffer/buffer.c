@@ -45,8 +45,10 @@ ENUM_RET bufferWrite(Buffer_Handler_t *buf, uint8_t *data, uint16_t size) {
 			return WARNING;
 		}
 
-		buf->data[buf->writeIndex++] = data[i];
-		buf->empty = false;
+		if (data[i] != '\0') {
+			buf->data[buf->writeIndex++] = data[i];
+			buf->empty = false;
+		}
 
 		if (buf->writeIndex == buf->size) {
 			buf->writeIndex = 0;
