@@ -154,6 +154,7 @@ ENUM_RET arrayBufferRead(ArrayBuffer_Handler_t* arrBuf, uint8_t* data, uint16_t 
 
 	data[lastIndex] = '\0';
 	arrBuf->readIndex++;
+	lastIndex = 0;
 
 	return OK;
 }
