@@ -120,7 +120,7 @@ IGNORE_TEST(buffer_test_group, bufferWrite_paramData_toLong) {
 }
 
 TEST(buffer_test_group, bufferWrite_paramSize_writingWithOverflow) {
-    uint8_t size = 4;
+    uint16_t size = 4;
     ENUM_RET rtn = bufferWrite(ptr_buf_4, (uint8_t*) "Te", 2);
     rtn = bufferRead(ptr_buf_4, (uint8_t*) returnedData_4, &size);
 
@@ -140,7 +140,7 @@ TEST(buffer_test_group, bufferWrite_paramSize_writingWithOverflow) {
 }
 
 TEST(buffer_test_group, bufferRead_paramBuffer_isNull) {
-    uint8_t size = 4;
+    uint16_t size = 4;
     ENUM_RET rtn = bufferWrite(ptr_buf_4, (uint8_t*) "Tes", 3);
     rtn = bufferRead(NULL, (uint8_t*) returnedData_4, &size);
 
@@ -149,7 +149,7 @@ TEST(buffer_test_group, bufferRead_paramBuffer_isNull) {
 
 
 TEST(buffer_test_group, bufferRead_paramBuffer_exactLength) {
-    uint8_t size = 4;
+    uint16_t size = 4;
     ENUM_RET rtn = bufferWrite(ptr_buf_4, (uint8_t*) "Test", 4);
     rtn = bufferRead(ptr_buf_4, (uint8_t*) returnedData_4, &size);
 
@@ -162,7 +162,7 @@ TEST(buffer_test_group, bufferRead_paramBuffer_exactLength) {
 }
 
 TEST(buffer_test_group, bufferRead_paramSize_smallerThanExpected) {
-    uint8_t size = 4;
+    uint16_t size = 4;
     ENUM_RET rtn = bufferWrite(ptr_buf_4, (uint8_t*) "Tes", 3);
     rtn = bufferRead(ptr_buf_4, (uint8_t*) returnedData_4, &size);
 
@@ -175,7 +175,7 @@ TEST(buffer_test_group, bufferRead_paramSize_smallerThanExpected) {
 }
 
 TEST(buffer_test_group, bufferRead_paramSize_writingWithOverflow_notFull) {
-    uint8_t size = 4;
+    uint16_t size = 4;
 
     ENUM_RET rtn = bufferWrite(ptr_buf_4, (uint8_t*) "Te", 2);
     CHECK_EQUAL(2, ptr_buf_4->writeIndex);
@@ -217,7 +217,7 @@ TEST(buffer_test_group, bufferRead_paramSize_writingWithOverflow_notFull) {
 }
 
 TEST(buffer_test_group, bufferRead_paramSize_writingWithOverflow_isFull) {
-    uint8_t size = 4;
+    uint16_t size = 4;
     ENUM_RET rtn = bufferWrite(ptr_buf_4, (uint8_t*) "Te", 2);
 
     CHECK_EQUAL(rtn, SUCCESS);
@@ -235,7 +235,7 @@ TEST(buffer_test_group, bufferRead_paramSize_writingWithOverflow_isFull) {
 }
 
 TEST(buffer_test_group, bufferRead_testWithManyData) {
-    uint8_t size = 5;
+    uint16_t size = 5;
     uint8_t readData[8];
     ENUM_RET rtn = bufferWrite(ptr_buf_4, (uint8_t*) "Te", 2);
     rtn = bufferRead(ptr_buf_4, (uint8_t*) returnedData_4, &size);
@@ -296,4 +296,29 @@ TEST(buffer_test_group, bufferRead_testWithManyData) {
     CHECK_FALSE(ptr_buf_4->overflow);
     STRCMP_EQUAL("Hall", (char*) readData);
     
+}
+
+TEST(buffer_test_group, bufferRead_paramSize_testWithManyData_2) {
+    Buffer_Handler_t *buf = bufferCreate(16);
+
+    char string1[] = "String1";
+    char string2[] = "STRING2";
+    char string3[] = "StRiNg3";
+    char expData[] = "String1STRING2StRiNg3";
+    char realData[20] = "";
+    uint16_t s = 20;
+
+    ENUM_RET ret;
+    
+    ret = bufferWrite(buf, (uint8_t*) string1, sizeof(string1));
+    CHECK_EQUAL(SUCCESS, ret);
+    ret = bufferWrite(buf, (uint8_t*) string1, sizeof(string2));
+    CHECK_EQUAL(SUCCESS, ret);
+    ret = bufferWrite(buf, (uint8_t*) string1, sizeof(string3));
+    CHECK_EQUAL(WARNING, ret);
+
+    ret = bufferRead(buf, (uint8_t*) realData, &s);
+    STRCMP_EQUAL(expData, realData);
+
+    bufferDestroy(buf);
 }

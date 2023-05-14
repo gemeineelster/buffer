@@ -32,7 +32,7 @@ int8_t bufferDestroy(Buffer_Handler_t *buf) {
 	return -1;
 }
 
-ENUM_RET bufferWrite(Buffer_Handler_t *buf, uint8_t *data, uint8_t size) {
+ENUM_RET bufferWrite(Buffer_Handler_t *buf, uint8_t *data, uint16_t size) {
 	if(buf == NULL || data == NULL || size == 0) {
 		return FAIL;
 	}
@@ -61,7 +61,7 @@ ENUM_RET bufferWrite(Buffer_Handler_t *buf, uint8_t *data, uint8_t size) {
 	return SUCCESS;
 }
 
-ENUM_RET bufferRead(Buffer_Handler_t* buf, uint8_t* data, uint8_t *size) {
+ENUM_RET bufferRead(Buffer_Handler_t* buf, uint8_t* data, uint16_t *size) {
 	volatile uint8_t readSize = 0;
 	if (buf == NULL) {
 		return FAIL;
