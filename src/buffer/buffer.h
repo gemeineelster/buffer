@@ -33,7 +33,7 @@ typedef struct {
 typedef enum {
 	WARNING = -2,
 	FAIL = -1,
-	SUCCESS = 0,
+	OK = 0,
 }ENUM_RET;
 
 Buffer_Handler_t *bufferCreate(uint8_t);

@@ -60,7 +60,7 @@ ENUM_RET bufferWrite(Buffer_Handler_t *buf, uint8_t *data, uint16_t size) {
 		}
 	}
 
-	return SUCCESS;
+	return OK;
 }
 
 ENUM_RET bufferRead(Buffer_Handler_t* buf, uint8_t* data, uint16_t *size) {
@@ -71,7 +71,7 @@ ENUM_RET bufferRead(Buffer_Handler_t* buf, uint8_t* data, uint16_t *size) {
 
 	strcpy((char*) data, "\0");
 	
-	for (int i = 0; i < *size; i++) {
+	for (int i = 0; i < *size-1; i++) {
 		data[i] = buf->data[buf->readIndex++];
 		buf->full = false;
 		readSize++;
@@ -95,5 +95,5 @@ ENUM_RET bufferRead(Buffer_Handler_t* buf, uint8_t* data, uint16_t *size) {
 
 	*size = readSize;
 
-	return SUCCESS;
+	return OK;
 }

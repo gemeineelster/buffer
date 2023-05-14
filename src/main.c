@@ -12,7 +12,7 @@ int main()
     char string1[] = "String1";
     char string2[] = "STRING2";
     char string3[] = "StRiNg3";
-    uint8_t rString[20] = "";
+    uint8_t rString[20] = "asdf";
     uint16_t s = 20;
 
     Buffer_Handler_t *buf_handle = bufferCreate(16);

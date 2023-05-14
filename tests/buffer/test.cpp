@@ -16,7 +16,7 @@ TEST_GROUP(buffer_test_group) {
     char text_4_cr[5];
     char text_8_cr[9];
 
-    char returnedData_4[4];
+    char returnedData_4[5];
 
    void setup()
    {
@@ -149,7 +149,7 @@ TEST(buffer_test_group, bufferRead_paramBuffer_isNull) {
 
 
 TEST(buffer_test_group, bufferRead_paramBuffer_exactLength) {
-    uint16_t size = 4;
+    uint16_t size = 6;
     ENUM_RET rtn = bufferWrite(ptr_buf_4, (uint8_t*) "Test", 4);
     rtn = bufferRead(ptr_buf_4, (uint8_t*) returnedData_4, &size);
 
@@ -263,7 +263,7 @@ TEST(buffer_test_group, bufferRead_testWithManyData) {
 
     CHECK_EQUAL(SUCCESS, rtn);
 
-    size = 1;
+    size = 2;
     rtn = bufferRead(ptr_buf_4, readData, &size);
     CHECK_EQUAL(1, size);
     
@@ -304,9 +304,10 @@ TEST(buffer_test_group, bufferRead_paramSize_testWithManyData_2) {
     char string1[] = "String1";
     char string2[] = "STRING2";
     char string3[] = "StRiNg3";
-    char expData[] = "String1STRING2St";
-    char realData[20] = "";
+    char expData1[] = "String1STRING2St";
+    char expData2[] = "STRING2StRiNg3St";
     uint16_t s = 20;
+    char realData[20] = "";
 
     ENUM_RET ret;
     
@@ -318,7 +319,18 @@ TEST(buffer_test_group, bufferRead_paramSize_testWithManyData_2) {
     CHECK_EQUAL(WARNING, ret);
 
     ret = bufferRead(buf, (uint8_t*) realData, &s);
-    STRCMP_EQUAL(expData, realData);
+    STRCMP_EQUAL(expData1, realData);
+
+    ret = bufferWrite(buf, (uint8_t*) string2, sizeof(string2));
+    CHECK_EQUAL(SUCCESS, ret);
+    ret = bufferWrite(buf, (uint8_t*) string3, sizeof(string3));
+    CHECK_EQUAL(SUCCESS, ret);
+    ret = bufferWrite(buf, (uint8_t*) string1, sizeof(string1));
+    CHECK_EQUAL(WARNING, ret);
+
+    s = 20;
+    ret = bufferRead(buf, (uint8_t*) realData, &s);
+    STRCMP_EQUAL(expData2, realData);
 
     bufferDestroy(buf);
 }
