@@ -9,6 +9,7 @@
                 "-g",
                 "${file}",
                 "${workspaceFolder}/src/buffer/buffer.c",
+                "${workspaceFolder}/src/gps_parser/gps_parser.c",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
             ],
